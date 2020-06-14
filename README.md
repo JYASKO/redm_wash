@@ -12,7 +12,10 @@ Ragdoll included, can be disabled in config.ini
 * Drag & drop
 * Add 'ensure redm_wash' to your server.cfg
 
-
+## Hotkeys
+Default hotkeys are:
+* ENTER to wash by the bathtub
+* DownArrow to ragdoll
 
 
 
