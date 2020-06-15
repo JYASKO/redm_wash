@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CitizenFX.Core;
@@ -10,8 +10,8 @@ namespace Wash
     {
         protected Config Config { get; set; }
         protected bool initialized = false;
-        protected string EnableRagdoll = "true";
-        //protected uint RagdollKey = 0x05CA7C52;
+        protected string EnableRagdoll = "false";
+        //protected uint RagdollKey = 0x4AF4D473;
         protected int CleaningTime = 20000;
         protected string progressBarsText = "Cleaning";
         protected string NearbyText = "Press ENTER to clean yourself";
@@ -30,12 +30,12 @@ namespace Wash
             {
                 GetDistance();
             }), false);
-            */
+            
 
             API.RegisterCommand("ragdollkey", new Action<int, List<object>, string>((source, args, raw) =>
             {
                 CitizenFX.Core.Debug.WriteLine($"RagdollKey is { EnableRagdoll }");
-            }), false);
+            }), false);*/
 
         }
 
@@ -49,6 +49,7 @@ namespace Wash
                 LoadConfig();
 
             }
+
             if (!API.IsEntityDead(API.PlayerPedId()))
             {
                 if (GetDistance() <= 2)
@@ -67,11 +68,11 @@ namespace Wash
 
                 if (EnableRagdoll == "true")
                 {
-                    if (API.IsControlJustPressed(0, 0x05CA7C52))
+                    if (API.IsControlJustPressed(0, 0x4AF4D473))
                 {
                     API.SetPedToRagdoll(API.PlayerPedId(), 1000, 1000, 0, true, true, true);
                 }
-            }
+                }
             }
         }
 
@@ -114,11 +115,11 @@ namespace Wash
 
             Config = new Config(configContent);
 
-            EnableRagdoll = Config.Get("EnableRagdoll", "true");
+            EnableRagdoll = Config.Get("EnableRagdoll", "false");
             progressBarsText = Config.Get("progressBarsText", "Cleaning");
             NearbyText = Config.Get("NearbyText", "Press ENTER to clean yourself");
 
-            /*var RagdollKeyString = Config.Get("RagdollKey", "0x05CA7C52");
+            /*var RagdollKeyString = Config.Get("RagdollKey", "0x4AF4D473");
             if (uint.TryParse(RagdollKeyString, out uint tmpRagdollKey))
             {
                 RagdollKey = tmpRagdollKey;
