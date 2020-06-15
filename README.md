@@ -8,8 +8,7 @@ Ragdoll included, can be enabled in config.ini
 
 ## Installation
 * Go to the releases tab and download the latest release
-* Create a folder called 'redm_wash' in your resources folder
-* Drag & drop
+* Drag & drop redm_wash folder into your resources folder
 * Add 'ensure redm_wash' to your server.cfg
 
 ## Demo
