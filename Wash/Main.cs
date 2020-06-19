@@ -11,10 +11,12 @@ namespace Wash
         protected Config Config { get; set; }
         protected bool initialized = false;
         protected string EnableRagdoll = "false";
-        //protected uint RagdollKey = 0x4AF4D473;
+        protected string RagdollKey = "0x4AF4D473";
         protected int CleaningTime = 20000;
         protected string progressBarsText = "Cleaning";
         protected string NearbyText = "Press ENTER to clean yourself";
+        protected string ProgressBarEnabled = "true";
+
         Vector3 bathPos = new Vector3(-317.38f, 762.64f, 117.44f);
         public Main()
         {
@@ -30,11 +32,11 @@ namespace Wash
             {
                 GetDistance();
             }), false);
-            
+
 
             API.RegisterCommand("ragdollkey", new Action<int, List<object>, string>((source, args, raw) =>
             {
-                CitizenFX.Core.Debug.WriteLine($"RagdollKey is { EnableRagdoll }");
+                CitizenFX.Core.Debug.WriteLine($"RagdollKey is { Convert.ToUInt32(RagdollKey, 16) }");
             }), false);*/
 
         }
@@ -60,7 +62,10 @@ namespace Wash
                     if (API.IsControlJustPressed(0, 0xC7B5340A))
                     {
                         Function.Call(Hash.TASK_START_SCENARIO_AT_POSITION, API.PlayerPedId(), API.GetHashKey("WORLD_HUMAN_WASH_FACE_BUCKET_GROUND_NO_BUCKET"), bathPos.X, bathPos.Y, bathPos.Z, 184.04f, CleaningTime, true, false, 0, true);
-                        Exports["progressBars"].startUI(CleaningTime, progressBarsText);
+                        if (ProgressBarEnabled == "true")
+                        {
+                            Exports["progressBars"].startUI(CleaningTime, progressBarsText);
+                        }
                         await Delay(CleaningTime);
                         Wash();
                     }
@@ -68,7 +73,7 @@ namespace Wash
 
                 if (EnableRagdoll == "true")
                 {
-                    if (API.IsControlJustPressed(0, 0x4AF4D473))
+                    if (API.IsControlJustPressed(0, Convert.ToUInt32(RagdollKey, 16)))
                 {
                     API.SetPedToRagdoll(API.PlayerPedId(), 1000, 1000, 0, true, true, true);
                 }
@@ -93,11 +98,12 @@ namespace Wash
 
         public void DrawText(string text, float x, float y)
         {
-            API.SetTextScale(0.35f, 0.35f);
+            API.SetTextScale(0.5f, 0.5f);
             API.SetTextColor(255, 255, 255, 255);
             API.SetTextCentre(true);
             API.SetTextDropshadow(1, 0, 0, 0, 200);
             API.SetTextFontForCurrentCommand(0);
+            Function.Call((Hash)0xADA9255D, 10); // Font
             API.DisplayText(Function.Call<long>(Hash._CREATE_VAR_STRING, 10, "LITERAL_STRING", text), x, y);
         }
         protected void LoadConfig()
@@ -116,14 +122,10 @@ namespace Wash
             Config = new Config(configContent);
 
             EnableRagdoll = Config.Get("EnableRagdoll", "false");
+            ProgressBarEnabled = Config.Get("ProgressBarEnabled", "true");
             progressBarsText = Config.Get("progressBarsText", "Cleaning");
             NearbyText = Config.Get("NearbyText", "Press ENTER to clean yourself");
-
-            /*var RagdollKeyString = Config.Get("RagdollKey", "0x4AF4D473");
-            if (uint.TryParse(RagdollKeyString, out uint tmpRagdollKey))
-            {
-                RagdollKey = tmpRagdollKey;
-            }*/
+            RagdollKey = Config.Get("RagdollKey", "0x4AF4D473");
 
             var CleaningTimeString = Config.Get("CleaningTime", "20000");
             if (int.TryParse(CleaningTimeString, out int tmpCleaningTime))
@@ -132,7 +134,7 @@ namespace Wash
             }
 
             /*Debug.WriteLine($"EnableRagdoll: {Config.Get("EnableRagdoll", "true")}");
-            Debug.WriteLine($"RagdollKey: {Config.Get("RagdollKey", "0x05CA7C52")}");
+            Debug.WriteLine($"RagdollKey: {Config.Get("RagdollKey", "0x4AF4D473")}");
             Debug.WriteLine($"CleaningTime: {Config.Get("CleaningTime", "20000")}");
             Debug.WriteLine($"progressBarsText: {Config.Get("progressBarsText", "Cleaning")}");
             Debug.WriteLine($"NearbyText: {Config.Get("NearbyText", "Press ENTER to clean yourself")}");*/
